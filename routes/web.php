@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ThreadController;
+use App\Models\Thread;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[ThreadController::class, 'index'])
+        ->name('root');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::resource('threads',ThreadController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy'])
+        ->middleware('auth');
+
+Route::resource('threads', ThreadController::class)
+        ->only(['show', 'index']);
+
+// Route::post('/threads/create', [ThreadController::class, 'create']);
+
+// Route::get('/threads', [ThreadController::class, 'index'])->name('threads');
+
+// Route::get('/threads', function () {
+    // return view('threads.index');
+// })->name('threads');
+
+require __DIR__.'/auth.php';
